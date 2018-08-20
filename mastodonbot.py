@@ -22,28 +22,39 @@ class MastodonBot(object):
         else:
             return False
     
-    def post(self, toot):
+    def post(self, toot, options=None):
         """Post a string as a new toot."""
         if len(toot) > self.char_limit:
             print("Toot text is over %d chars" % self.char_limit)
             return False
-        status = self.mast.toot(toot)
+        if options:
+            status = self.mast.status_post(toot, **options)
+        else:
+            status = self.mast.status_post(toot)
         return True
     
-    def post_image(self, imgfile, text):
+    def post_image(self, imgfile, text, options=None):
         """Post a toot with one attached image
 
 Args:
     img (str): image file
     text (str): text part of toot
+    options (dict): options, see the Mastodon.py docs
 
 Returns:
     status (bool): True if the post was successful
        """
         print("Posting %s" % imgfile)
-        image = self.mast.media_post(imgfile)
+        if 'description' in options:
+            image = self.mast.media_post(imgfile, mime_type=None, description=options['description'])
+            del options['description']
+        else:
+            image = self.mast.media_post(imgfile)
         if image:
             if not text:
                 text = '.'
-            post = self.mast.status_post(text, media_ids = [ image ])
-        
+            if options:
+                post = self.mast.status_post(text, media_ids=[ image ], **options)
+            else:
+                post = self.mast.status_post(text, media_ids=[ image ])
+

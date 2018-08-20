@@ -21,8 +21,8 @@ Attributes:
 """
 
     def __init__(self):
-        self.char_limit = 140
-        self.char_limit_img = 130
+        self.char_limit = 280
+        self.char_limit_img = 270
         self.auth_cf_fields = [ 'api_key', 'api_secret', 'oauth_token', 'oauth_token_secret' ]
     
     def auth(self, cf):
@@ -33,7 +33,7 @@ Attributes:
         else:
             return False
     
-    def post(self, tweet):
+    def post(self, tweet, options=None):
         """Post a string as a new tweet."""
         if len(tweet) > self.char_limit:
             print("Tweet text is over %d chars" % self.char_limit)
@@ -41,12 +41,13 @@ Attributes:
         self.twitter.update_status(status=tweet)
         return True
     
-    def post_image(self, imgfile, tweet):
+    def post_image(self, imgfile, tweet, options=None):
         """Post a tweet with one attached image
 
 Args:
     img (str): image file
     text (str): text part of tweet
+    options (dict): Twitter client ignores this
 
 Returns:
     status (bool): True if the post was successful
