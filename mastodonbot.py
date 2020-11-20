@@ -4,9 +4,18 @@ mastodonbot
 
 from mastodon import Mastodon
 
+DEFAULT_OPTIONS = {
+    'visibility': 'unlisted'
+}
+
 
 class MastodonBot(object):
     """A Mastodon bot class.
+
+    Note that the default visibility for Mastodon posts is 'unlisted' -
+    this is good etiquette because it doesn't clutter the federated
+    timeline as much. You can override this by passing in a 'visibility'
+    as part of the options argument to the post method
 
 """
     def __init__(self):
@@ -27,10 +36,11 @@ class MastodonBot(object):
         if len(toot) > self.char_limit:
             print("Toot text is over %d chars" % self.char_limit)
             return False
+        e_options = DEFAULT_OPTIONS.copy()
         if options:
-            status = self.mast.status_post(toot, **options)
-        else:
-            status = self.mast.status_post(toot)
+            for o, v in options.items():
+                e_options[o] = v
+        status = self.mast.status_post(toot, **e_options)
         return True
     
     def post_image(self, imgfile, text, options=None):
