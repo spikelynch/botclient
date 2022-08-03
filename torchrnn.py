@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-import subprocess, os
+import subprocess
+import os
+import signal
+import sys
 
 TORCHRNN = os.environ['TORCH_RNN']
 
@@ -14,10 +17,26 @@ TRARGS = {  }
 SAMPLE_SIZE = 5
 DEFAULT_LINE = 140
 DEFAULT_LENGTH = 2000
+DEFAULT_MAXTIME = 60 * 60
+
+
+def run_subprocess(cmd):
+    """
+    Trying this method to start the lua subprocess, timeout after
+    DEFAULT_MAXTIME, and then send a kill signal to it and any child processes
+    if it expires.
+    """
+    try:
+        p = subprocess.Popen(cmd, cwd=TORCHRNN, start_new_session=True, stdout=subprocess.PIPE)
+        data, err = p.communicate(timeout=DEFAULT_MAXTIME)
+        return data
+    except subprocess.TimeoutExpired:
+        os.killpg(os.getpgid(p.pid), signal.SIGTERM)
+    return ""
 
 
 def run_sample(model, temperature, start, nchars, opts):
-    cmd = TRCMD
+    cmd = TRCMD[:]
     args = TRARGS
     args['-checkpoint'] = model
     args['-temperature'] = str(temperature)
@@ -30,7 +49,8 @@ def run_sample(model, temperature, start, nchars, opts):
     for k, v in args.items():
         cmd.append(k)
         cmd.append(v)
-    return subprocess.check_output(cmd, cwd=TORCHRNN)
+    return run_subprocess(cmd)
+
 
 
 def generate_lines(model, temperature=1.0, n=1, min_length=1, max_length=DEFAULT_LINE, opts={}):
