@@ -4,12 +4,14 @@ bot - a basic Bot class
 
 from twitterbot import TwitterBot
 from mastodonbot import MastodonBot
+from gotosocialbot import GoToSocialBot
 
 import argparse, yaml, pystache, random, time, sys
 
 SERVICES = {
     'Twitter': TwitterBot,
-    'Mastodon': MastodonBot
+    'Mastodon': MastodonBot,
+    'GoToSocial': GoToSocialBot,
     }
 
 
@@ -31,7 +33,7 @@ Attributes:
         """Create a Bot
 
 The base class __init__ creates an argpase.ArgumentParser and adds two
-arguments to it: --config (mndatory, the config file name) and --dry-run
+arguments to it: --config (mandatory, the config file name) and --dry-run
 (optional flag to just create the tweet and print to stdout rather than
 post it).
 
@@ -42,7 +44,7 @@ This method doesn't parse the args (this is so that the subclass can add
 new ones) - that's done in the configure method.
 """
         self.ap = argparse.ArgumentParser()
-        self.ap.add_argument('-s', '--service', default="Twitter", help="Twitter or Mastodon")
+        self.ap.add_argument('-s', '--service', default="Mastodon", help="GoToSocial or Mastodon")
         self.ap.add_argument('-c', '--config', required=True, type=str, help="Config file")
         self.ap.add_argument('-d', '--dry-run', action='store_true', help="Don't post")
 
@@ -62,7 +64,7 @@ reason, this calls sys.exit().
         self.cf = None
         with open(self.args.config) as cf:
             try:
-                self.cf = yaml.load(cf)
+                self.cf = yaml.load(cf, Loader=yaml.Loader)
             except yaml.YAMLError as exc:
                 print("%s parse error: %s" % ( self.args.config, exc ))
                 if hasattr(exc, 'problem_mark'):
