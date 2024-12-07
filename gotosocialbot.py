@@ -37,8 +37,6 @@ class GoToSocialBot():
                 e_options[o] = v
         e_options['status'] = status
         json_d = json.dumps(e_options)
-        print(json_d)
-        print(self.headers)
         r = requests.post(
             f"{self.base_url}/api/v1/statuses",
             data=json_d,
@@ -47,19 +45,28 @@ class GoToSocialBot():
         r.raise_for_status()
         return True
     
-#     def post_image(self, imgfile, text, options=None):
-#         """Post a toot with one attached image
+    def post_image(self, imgfile, description, mime_type, options=None):
+        """Post with one attached image
 
-# Args:
-#     img (str): image file
-#     text (str): text part of toot
-#     options (dict): options
+Args:
+    img (str): image file
+    text (str): text part of toot
+    options (dict): options
 
-# Returns:
-#     status (bool): True if the post was successful
-#        """
-#         pass
-
+Returns:
+    status (bool): True if the post was successful
+       """
+        with open(imgfile, "rb") as ifh:
+            files = { 'file': (imgfile, ifh, mime_type)}
+            r = requests.post(
+                f"{self.base_url}/api/v1/media",
+                files=files,
+                data={"description": description},
+                headers={"Authorization": f"Bearer {self.access_token}"}
+            ) 
+            r.raise_for_status()
+            rjson = r.json()
+            print(json.dumps(rjson, indent=2))
 
 if __name__ == "__main__":
     r = requests.post("Testing again");
