@@ -9,7 +9,6 @@ from gotosocialbot import GoToSocialBot
 import argparse, yaml, pystache, random, time, sys
 
 SERVICES = {
-    'Twitter': TwitterBot,
     'Mastodon': MastodonBot,
     'GoToSocial': GoToSocialBot,
     }
