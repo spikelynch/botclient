@@ -45,7 +45,7 @@ class GoToSocialBot():
         r.raise_for_status()
         return True
     
-    def post_image(self, status, imgfile, alt_text, mime_type, options=None):
+    def post_image(self, imgfile, status, options=None):
         """Post with one attached image
 
 Args:
@@ -56,6 +56,11 @@ Args:
 Returns:
     status (bool): True if the post was successful
         """
+        if "description" in options:
+            alt_text = options["description"]
+            del options["description"]
+        mime_type = options["mime_type"]
+        del options["mime_type"]
         with open(imgfile, "rb") as ifh:
             files = { 'file': (imgfile, ifh, mime_type)}
             r = requests.post(
