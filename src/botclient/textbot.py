@@ -2,7 +2,7 @@
 
 import os.path
 
-from botclient import Bot
+from botclient.botclient import Bot
 
 class TextBot(Bot):
     """

@@ -2,7 +2,7 @@
 
 import os.path, re
 
-from textbot import TextBot
+from botclient.textbot import TextBot
 
 class PictureBot(TextBot):
     """
