@@ -2,8 +2,8 @@
 bot - a basic Bot class
 """
 
-from mastodonbot import MastodonBot
-from gotosocialbot import GoToSocialBot
+from botclient.mastodon import MastodonBot
+from botclient.gotosocial import GoToSocialBot
 
 import argparse, yaml, pystache, random, time, sys
 
