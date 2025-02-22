@@ -1,3 +1,3 @@
 # botclient
 
-A simple Python bot library for Twitter, Mastodon and GoToSocial
+A simple Python bot library for Mastodon and GoToSocial

@@ -2,7 +2,6 @@
 bot - a basic Bot class
 """
 
-from twitterbot import TwitterBot
 from mastodonbot import MastodonBot
 from gotosocialbot import GoToSocialBot
 
