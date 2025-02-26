@@ -114,6 +114,7 @@ def generate_stuff(d, format):
 			fh.writelines([ l + '\n' for l in stuff])
 		else:
 			fh.write(json.dumps(stuff, indent=4))
+	print(stuff)
 	return stuff[2] # it's ok if this knows which are comments
 
 
