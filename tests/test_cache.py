@@ -1,6 +1,7 @@
 import time
 import os.path
 import random
+import json
 
 from botclient.botcache import BotCache
 
@@ -19,14 +20,27 @@ def generate_stuff(d, format, nlines):
 			fh.write(json.dumps(stuff, indent=4))
 	return stuff
 
-def test_cache(tmp_path):
-    cache = BotCache({ "dir": str(tmp_path), "cache_max": 8, format: "txt"})
-    fresh = generate_stuff(str(tmp_path), cache.format, 100)
-    cache.put(fresh)
-    for line in [ l for l in fresh if len(l) > 0 and l[0] != '#']:
-        cache_line = cache.get()
-        assert(cache_line == cache)
+def test_cache_txt(tmp_path):
+	CACHE_MAX = 8
+	cache = BotCache({ "dir": str(tmp_path), "cache_max": CACHE_MAX, "format": "txt"})
+	fresh = generate_stuff(str(tmp_path), cache.format, 100)
+	not_comments = [ l for l in fresh if len(l) > 0 and l[0] != '#']
+	cache.put(not_comments[0])
+	for line in not_comments[1:CACHE_MAX]:
+		cache_line = cache.get()
+		assert(cache_line == line)
+	assert(cache.get() is None)
 
+def test_cache_json(tmp_path):
+	CACHE_MAX = 8
+	cache = BotCache({ "dir": str(tmp_path), "cache_max": CACHE_MAX, "format": "json"})
+	fresh = generate_stuff(str(tmp_path), cache.format, 100)
+	not_comments = [ l for l in fresh if len(l) > 0 and l[0] != '#']
+	cache.put(not_comments[0])
+	for line in not_comments[1:CACHE_MAX]:
+		cache_line = cache.get()
+		assert(cache_line == line)
+	assert(cache.get() is None)
         
 
 

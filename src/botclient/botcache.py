@@ -101,6 +101,7 @@ class BotCache():
 
 
 
+
 def generate_stuff(d, format):
 	"""Generates a file of timestamped random stuff for testing"""
 	ts = str(time.time())
