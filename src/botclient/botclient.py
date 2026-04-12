@@ -83,7 +83,14 @@ reason, this calls sys.exit().
             sys.exit(-1)
 
     def render(self):
-        """Render a moustache template with this object and return the result"""
+        """Render a mustache template with this object and return the result.
+
+Pystache expects to find a template with the same name as the class you've
+implemented with this as a base class, in the same directory, substituting
+CamelCase for snake_case - so if the class is for eg RogueAi, the template should
+be rogue_ai.mustache
+
+        """
         pyr = pystache.Renderer()
         return pyr.render(self)
 
